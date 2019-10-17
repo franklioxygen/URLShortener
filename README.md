@@ -18,6 +18,7 @@ Once a long url post to backend, the backend will check if it is in database.
   - If crashes, creat new key for crashed new long url. (add timestamp to shorturl then do md5)  
   - If no crash, return existing long url.  
 - If not exists, insert new key value pair.  
+- URL RegExp validation is in frontend by javascript
 
 
 # STORD URL Shortener Exercise

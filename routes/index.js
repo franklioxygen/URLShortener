@@ -3,7 +3,6 @@ var router = express.Router();
 var md5 = require('md5');
 var fetch = require("node-fetch");
 
-
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', {
@@ -59,7 +58,8 @@ let insertRecord = (res, req, short, long, portocol, hostname, section) => {
     shortResult: req.protocol + "://" + req.get('host') + '/' + short
   });
 };
-
+router.get('/favicon.ico', (req, res) => res.status(204));
+//---------receive short url then redirect to long-------------------------------------
 router.get('/:short', function (req, res, next) {
   let shortParams = req.params.short;
   let section = shortParams.substring(0, 1);
@@ -70,6 +70,7 @@ router.get('/:short', function (req, res, next) {
   }).then(json => json.json()).then(data => (
     data = data[0].long.replace(/"/g, ""),
     res.redirect(data)));
+
 });
 
 module.exports = router;

@@ -9,14 +9,23 @@ block content
       document.execCommand("copy");
       alert("Short URL copied: \n" + copyText.value);
     }
+    function validURL() {
+      let str= document.getElementById("oriurl").value
+      var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+      document.getElementById("submitLong").disabled = !pattern.test(str);
+    }
 
   h1= title
   p Put long URL here:
   form(method='POST' action='/')
           div.form-group
-            input#oriurl.form-control(type='text', name='longURL')
+            input#oriurl.form-control(type='text', name='longURL' onchange='validURL()')
           br
-          button.btn.btn-primary(type='submit') Shorten!
+          button#submitLong.btn.btn-primary(type='submit' disabled) Shorten!
   p Click to copy:
-  
   input(id="shortenURL" type=text onClick='copyOnClick()'  value=shortResult)

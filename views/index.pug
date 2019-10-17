@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  script.
+    function copyOnClick() {
+      var copyText = document.getElementById("shortenURL");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Short URL copied: \n" + copyText.value);
+    }
+
+  h1= title
+  p Put long URL here:
+  form(method='POST' action='/')
+          div.form-group
+            input#oriurl.form-control(type='text', name='longURL')
+          br
+          button.btn.btn-primary(type='submit') Shorten!
+  p Click to copy:
+  
+  input(id="shortenURL" type=text onClick='copyOnClick()'  value=shortResult)

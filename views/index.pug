@@ -1,30 +1,14 @@
 extends layout
 
 block content
-  script.
-    function copyOnClick() {
-      var copyText = document.getElementById("shortenURL");
-      copyText.select();
-      copyText.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-      alert("Short URL copied: \n" + copyText.value);
-    }
-    function validURL() {
-      let str= document.getElementById("oriurl").value
-      var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-      document.getElementById("submitLong").disabled = !pattern.test(str);
-    }
+  script(src="public/javascripts/script.js")
+  script(src="public/javascripts/validURL.js")
 
   h1= title
   p Put long URL here:
   form(method='POST' action='/')
           div.form-group
-            input#oriurl.form-control(type='text', name='longURL' onchange='validURL()')
+            input#oriurl.form-control(type='text', name='longURL' onchange='let val=document.getElementById("oriurl").value; validURL(val)')
           br
           button#submitLong.btn.btn-primary(type='submit' disabled) Shorten!
   p Click to copy:

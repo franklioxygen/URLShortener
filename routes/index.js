@@ -1,7 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var md5 = require('md5');
-var fetch = require("node-fetch");
+const express = require('express');
+const router = express.Router();
+const md5 = require('md5');
+const fetch = require("node-fetch");
+const app = require('../app');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -17,7 +18,8 @@ router.post('/', function (req, res, next) {
   let section = shorten.substring(0, 1);
 
   //-------check if key exist-------------
-  fetch(req.protocol + "://" + req.hostname + ':3001/' + section + '/?short=' + shorten, {
+
+  fetch(req.protocol + "://" + req.hostname + ":" + app.jsonServerPort + "/" + section + '/?short=' + shorten, {
     headers: {
       "Content-type": "application/json; charset=UTF-8"
     }
@@ -39,10 +41,10 @@ router.post('/', function (req, res, next) {
     }
   });
 });
-
+const date = new Date();
 let insertRecord = (res, req, short, long, portocol, hostname, section) => {
-  const date = new Date();
-  fetch(portocol + "://" + hostname + ':3001/' + section, {
+
+  fetch(portocol + "://" + hostname + ":" + app.jsonServerPort + "/" + section, {
     method: "POST",
     body: JSON.stringify({
       expire: date.setDate(date.getDate() + 7), // set expire date
@@ -63,14 +65,21 @@ router.get('/favicon.ico', (req, res) => res.status(204));
 router.get('/:short', function (req, res, next) {
   let shortParams = req.params.short;
   let section = shortParams.substring(0, 1);
-  fetch(req.protocol + "://" + req.hostname + ':3001/' + section + '/?short=' + shortParams, {
-    headers: {
-      "Content-type": "application/json; charset=UTF-8"
-    }
-  }).then(json => json.json()).then(data => (
-    data = data[0].long.replace(/"/g, ""),
-    res.redirect(data)));
 
+  fetch(req.protocol + "://" + req.hostname + ":" + app.jsonServerPort + "/" + section + '/?short=' + shortParams).then(json => json.json()).then(data => (
+    fetch(req.protocol + "://" + req.hostname + ":" + app.jsonServerPort + "/" + section + '/' + data[0].id, {
+      method: "PUT",
+      body: JSON.stringify({
+        expire: date.setDate(date.getDate() + 7), // update expire date
+        short: data[0].short,
+        long: data[0].long
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+  )).then(json => json.json()).then(data => (
+    res.redirect(data.long)));
 });
 
 module.exports = router;

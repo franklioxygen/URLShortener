@@ -28,7 +28,7 @@ router.post('/', function (req, res, next) {
     if (data.length !== 0) {
       // if key exist but long doesn't match, creat new key
       if (data[0].long !== longURL) {
-        insertRecord(res, req, md5(shorten + Date.now()), longURL, req.protocol, req.hostname, section)
+        insertRecord(res, req, md5(shorten + longURL), longURL, req.protocol, req.hostname, section)
       } else {
         res.render('index', {
           title: 'URL Shortner',
